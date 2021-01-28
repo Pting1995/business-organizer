@@ -1,0 +1,21 @@
+-- three tables - maybe use constructors?
+    -- employee
+        -- id -PK
+        -- first name
+        -- last name
+        -- role id - FK
+        -- manager id - FK
+    -- role
+        -- id - PK
+        -- title
+        -- salary
+        -- department id - FK
+    -- department
+        -- id - PK
+        -- name
+    
+-- command line - get inquirer 
+    -- add employee, role, dep use INSERT INTO to fill
+    -- view employee, role, dep
+    -- update employee
+
