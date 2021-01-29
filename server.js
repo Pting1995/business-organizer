@@ -1,10 +1,6 @@
-// command line - get inquirer 
-//     add employee, role, dep use INSERT INTO to fill
-//     view employee, role, dep
-//     update employee
-
 var mysql = require("mysql");
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -89,7 +85,7 @@ function addEmployee() {
                 firstName: res.firstName,
                 lastName: res.lastName,
                 roleID: res.role
-            }, 
+            },
             function (err, res) {
                 if (err) throw err;
 
@@ -99,8 +95,6 @@ function addEmployee() {
             }
         )
     })
-
-
 }
 
 // function addRole() {
@@ -111,10 +105,15 @@ function addEmployee() {
 
 // }
 
-// function viewEmployee() {
+function viewEmployee() {
+    connection.query("SELECT * FROM employeeTable", function (err, res) {
+        if (err) throw err;
 
-// }
+        console.table("All employees:", res)
 
+        initPrompt();
+    });
+}
 // function viewRole() {
 
 // }
