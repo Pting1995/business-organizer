@@ -64,26 +64,26 @@ function initPrompt() {
 function addEmployee() {
     inquirer.prompt([
         {
-            type : "input",
-            message : "What is the employee's first name?",
-            name : "firstName"
+            type: "input",
+            message: "What is the employee's first name?",
+            name: "firstName"
         },
         {
-            type : "input",
-            message : "What is the employee's last name?",
-            name : "lastName"
+            type: "input",
+            message: "What is the employee's last name?",
+            name: "lastName"
         },
         {
-            type : "input",
-            message : "What is the employee's RoleID?",
-            name : "role"
+            type: "input",
+            message: "What is the employee's RoleID?",
+            name: "role"
         }
     ]).then((res) => {
         connection.query("INSERT INTO employeeTable SET ?",
             {
-                firstName : res.firstName,
-                lastName : res.lastName,
-                roleID : res.role
+                firstName: res.firstName,
+                lastName: res.lastName,
+                roleID: res.role
             },
             function (err, res) {
                 if (err) throw err;
@@ -97,26 +97,26 @@ function addEmployee() {
 function addRole() {
     inquirer.prompt([
         {
-            type : "input",
-            message : "What is the name of the role?",
-            name : "roleName"
+            type: "input",
+            message: "What is the name of the role?",
+            name: "roleName"
         },
         {
-            type : "input",
-            message : "What is the role's salary?",
-            name : "roleSalary"
+            type: "input",
+            message: "What is the role's salary?",
+            name: "roleSalary"
         },
         {
-            type : "input",
-            message : "What department does this role belong to?",
-            name : "roleDep"
+            type: "input",
+            message: "What department does this role belong to?",
+            name: "roleDep"
         }
     ]).then((res) => {
         connection.query("INSERT INTO roleTable SET ?",
             {
-                title : res.roleName,
-                salary : res.roleSalary,
-                depID : res.roleDep
+                title: res.roleName,
+                salary: res.roleSalary,
+                depID: res.roleDep
             },
             function (err, res) {
                 if (err) throw err;
@@ -130,14 +130,14 @@ function addRole() {
 function addDep() {
     inquirer.prompt([
         {
-            type : "input",
-            message : "What is the name of the department?",
-            name : "depName"
+            type: "input",
+            message: "What is the name of the department?",
+            name: "depName"
         }
     ]).then((res) => {
         connection.query("INSERT INTO departmentTable SET ?",
             {
-                depName : res.depName
+                depName: res.depName
             },
             function (err, res) {
                 if (err) throw err;
@@ -168,10 +168,33 @@ function viewRoles() {
     });
 }
 
-// function viewDeps() {
+function viewDeps() {
+    connection.query("SELECT * FROM departmentTable", function (err, res) {
+        if (err) throw err;
 
-// }
+        console.table("All departments:", res)
 
-// function changeEmpRole() {
+        initPrompt();
+    });
+}
 
-// }
+function changeEmpRole() {
+    connection.query("SELECT * FROM employeeTable", function (err, res) {
+        if (err) throw err;
+
+        const fullName = [];
+
+        res.forEach(index => {
+            fullName.push(`${index.firstName} ${index.lastName}`)
+        });
+
+        inquirer.prompt([
+            {
+                type: "list",
+                name: "employeeChange",
+                message: "Who's role do you want to change?",
+                choices: fullName
+            }
+        ])
+    });
+}
