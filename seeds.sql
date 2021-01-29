@@ -1,5 +1,5 @@
 INSERT INTO departmentTable (depName)
-VALUES ("Full Stack Developer");
+VALUES ("Operations");
 
 INSERT INTO roleTable (title, salary, depID)
 VALUES ("Manager", "6", "1");

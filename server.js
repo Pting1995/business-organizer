@@ -18,10 +18,10 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
 
-    homePrompt()
+    initPrompt();
 });
 
-function homePrompt() {
+function initPrompt() {
     inquirer.prompt([
         {
             type: "list",
@@ -68,26 +68,39 @@ function homePrompt() {
 function addEmployee() {
     inquirer.prompt([
         {
-            type : input,
-            message : "What is the employee's first name?",
-            name : "firstName"
-        }
-    ])
-
-
-    console.log("Adding new employee!");
-    connection.query("INSERT INTO products SET ?",
-        {
-            employeeID : "Rocky Road",
-            price: 3.0,
-            quantity: 50
+            type: "input",
+            message: "What is the employee's first name?",
+            name: "firstName"
         },
-        function (err, res) {
-            console.log(res.affectedRows + " product inserted!\n");
-            // Call updateProduct AFTER the INSERT completes
-            updateProduct();
+        {
+            type: "input",
+            message: "What is the employee's last name?",
+            name: "lastName"
+        },
+        {
+            type: "input",
+            message: "What is the employee's RoleID?",
+            name: "role"
         }
-    )
+    ]).then((res) => {
+        console.log("Adding new employee!");
+        connection.query("INSERT INTO employeeTable SET ?",
+            {
+                firstName: res.firstName,
+                lastName: res.lastName,
+                roleID: res.role
+            }, 
+            function (err, res) {
+                if (err) throw err;
+
+                console.log(res.affectedRows + " product inserted!\n");
+
+                initPrompt();
+            }
+        )
+    })
+
+
 }
 
 // function addRole() {
