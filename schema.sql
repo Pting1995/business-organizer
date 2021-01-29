@@ -25,11 +25,31 @@ CREATE TABLE employeeTable (
   employeeID INT NOT NULL AUTO_INCREMENT,
   firstName VARCHAR(20) NOT NULL,
   lastName VARCHAR(20) NOT NULL,
-  roleID INT,
---   FOREIGN KEY (roleID) managerID INT NOT NULL,
+  roleID INT NOT NULL,
+  managerID INT,
   PRIMARY KEY (employeeID),
   FOREIGN KEY (roleID) REFERENCES roleTable(roleID)
 );
 
+CREATE TABLE roleNum (
+    SELECT employeeTable.firstName, employeeTable.lastName, roleTable.title
+    FROM employeeTable
+    INNER JOIN roleTable
+    ON employeeTable.roleID = roleTable.roleID
+);
+    -- SELECT employeeTable.firstName, employeeTable.lastName, roleTable.title
+    -- FROM roleTable
+    -- INNER JOIN employeeTable
+    -- ON employeeTable.roleID = roleTable.roleID
 
+
+CREATE TABLE overview (
+    SELECT departmentTable.depName, employeeTable.employeeID, employeeTable.firstName, employeeTable.lastName, roleTable.title, roleTable.salary
+    FROM roleTable
+    INNER JOIN departmentTable ON departmentTable.depID = roleTable.depID
+    INNER JOIN employeeTable ON employeeTable.roleID = roleTable.roleID
+);
+
+SELECT * FROM employeeRole;
+SELECT * FROM overview;
 

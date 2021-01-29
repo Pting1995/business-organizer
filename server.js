@@ -36,12 +36,15 @@ function initPrompt() {
     ]).then((res) => {
         switch (res.choiceA) {
             case "Add employee":
+                showOverview()
                 addEmployee()
                 break;
             case "Add role":
+                showOverview()
                 addRole()
                 break;
             case "Add department":
+                showOverview()
                 addDep()
                 break;
             case "View employee":
@@ -60,6 +63,13 @@ function initPrompt() {
     })
 }
 
+function showOverview() {
+    connection.query("SELECT * FROM overview", function (err, res) {
+        if (err) throw err;
+
+        console.table("All roles:", res)
+    });
+}
 
 function addEmployee() {
     inquirer.prompt([
@@ -75,15 +85,21 @@ function addEmployee() {
         },
         {
             type: "input",
-            message: "What is the employee's RoleID?",
-            name: "role"
+            message: "What is the employee's roleID?",
+            name: "roleID"
+        },
+        {
+            type: "input",
+            message: "What is the manager's employee ID?",
+            name: "manager"
         }
-    ]).then((res) => {
+    ]).then((response) => {
         connection.query("INSERT INTO employeeTable SET ?",
             {
-                firstName: res.firstName,
-                lastName: res.lastName,
-                roleID: res.role
+                firstName: response.firstName,
+                lastName: response.lastName,
+                roleID: response.roleID,
+                managerID: response.manager
             },
             function (err, res) {
                 if (err) throw err;
@@ -192,7 +208,7 @@ function changeEmpRole() {
             {
                 type: "list",
                 name: "employeeChange",
-                message: "Who's role do you want to change?",
+                message: "Which employee's role do you want to change?",
                 choices: fullName
             }
         ])
