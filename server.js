@@ -45,13 +45,13 @@ function initPrompt() {
                 addDep()
                 break;
             case "View employee":
-                viewEmployee()
+                viewEmployees()
                 break;
             case "View role":
-                viewRole()
+                viewRoles()
                 break;
             case "View department":
-                viewDep()
+                viewDeps()
                 break;
             case "Update employee role":
                 changeEmpRole()
@@ -64,48 +64,91 @@ function initPrompt() {
 function addEmployee() {
     inquirer.prompt([
         {
-            type: "input",
-            message: "What is the employee's first name?",
-            name: "firstName"
+            type : "input",
+            message : "What is the employee's first name?",
+            name : "firstName"
         },
         {
-            type: "input",
-            message: "What is the employee's last name?",
-            name: "lastName"
+            type : "input",
+            message : "What is the employee's last name?",
+            name : "lastName"
         },
         {
-            type: "input",
-            message: "What is the employee's RoleID?",
-            name: "role"
+            type : "input",
+            message : "What is the employee's RoleID?",
+            name : "role"
         }
     ]).then((res) => {
-        console.log("Adding new employee!");
         connection.query("INSERT INTO employeeTable SET ?",
             {
-                firstName: res.firstName,
-                lastName: res.lastName,
-                roleID: res.role
+                firstName : res.firstName,
+                lastName : res.lastName,
+                roleID : res.role
             },
             function (err, res) {
                 if (err) throw err;
-
-                console.log(res.affectedRows + " product inserted!\n");
-
+                console.log("Added new employee!");
                 initPrompt();
             }
         )
     })
 }
 
-// function addRole() {
+function addRole() {
+    inquirer.prompt([
+        {
+            type : "input",
+            message : "What is the name of the role?",
+            name : "roleName"
+        },
+        {
+            type : "input",
+            message : "What is the role's salary?",
+            name : "roleSalary"
+        },
+        {
+            type : "input",
+            message : "What department does this role belong to?",
+            name : "roleDep"
+        }
+    ]).then((res) => {
+        connection.query("INSERT INTO roleTable SET ?",
+            {
+                title : res.roleName,
+                salary : res.roleSalary,
+                depID : res.roleDep
+            },
+            function (err, res) {
+                if (err) throw err;
+                console.log("Added new role!");
+                initPrompt();
+            }
+        )
+    })
+}
 
-// }
+function addDep() {
+    inquirer.prompt([
+        {
+            type : "input",
+            message : "What is the name of the department?",
+            name : "depName"
+        }
+    ]).then((res) => {
+        connection.query("INSERT INTO departmentTable SET ?",
+            {
+                depName : res.depName
+            },
+            function (err, res) {
+                if (err) throw err;
+                console.log("Added new Department!");
+                initPrompt();
+            }
+        )
+    })
+}
 
-// function addDep() {
-
-// }
-
-function viewEmployee() {
+function viewEmployees() {
     connection.query("SELECT * FROM employeeTable", function (err, res) {
         if (err) throw err;
 
@@ -114,11 +157,18 @@ function viewEmployee() {
         initPrompt();
     });
 }
-// function viewRole() {
 
-// }
+function viewRoles() {
+    connection.query("SELECT * FROM roleTable", function (err, res) {
+        if (err) throw err;
 
-// function viewDep() {
+        console.table("All roles:", res)
+
+        initPrompt();
+    });
+}
+
+// function viewDeps() {
 
 // }
 
