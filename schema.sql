@@ -1,21 +1,35 @@
 -- three tables - maybe use constructors?
-    -- employee
-        -- id -PK
-        -- first name
-        -- last name
-        -- role id - FK
-        -- manager id - FK
-    -- role
-        -- id - PK
-        -- title
-        -- salary
-        -- department id - FK
-    -- department
-        -- id - PK
-        -- name
-    
--- command line - get inquirer 
-    -- add employee, role, dep use INSERT INTO to fill
-    -- view employee, role, dep
-    -- update employee
+
+DROP DATABASE IF EXISTS workDB;
+
+CREATE DATABASE workDB;
+
+USE workDB;
+
+CREATE TABLE departmentTable (
+    depID INT NOT NULL AUTO_INCREMENT,
+    depName VARCHAR(20) NOT NULL,
+    PRIMARY KEY (depID)
+);
+
+CREATE TABLE roleTable (
+    roleID INT NOT NULL AUTO_INCREMENT,
+    title VARCHAR(20) NOT NULL,
+    salary INT NOT NULL,
+    depID INT,
+    PRIMARY KEY (roleID),
+    FOREIGN KEY (depID) REFERENCES departmentTable(depID)
+);
+
+CREATE TABLE employeeTable (
+  employeeID INT NOT NULL AUTO_INCREMENT,
+  firstName VARCHAR(20) NOT NULL,
+  lastName VARCHAR(20) NOT NULL,
+  roleID INT,
+--   FOREIGN KEY (roleID) managerID INT NOT NULL,
+  PRIMARY KEY (employeeID),
+  FOREIGN KEY (roleID) REFERENCES roleTable(roleID)
+);
+
+
 
