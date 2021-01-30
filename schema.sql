@@ -26,8 +26,9 @@ CREATE TABLE employeeTable (
   firstName VARCHAR(20) NOT NULL,
   lastName VARCHAR(20) NOT NULL,
   roleID INT NOT NULL,
+  managerID INT,
   PRIMARY KEY (employeeID),
-  FOREIGN KEY (managerID) REFERENCES employeeTable(employeeID),
+  
   FOREIGN KEY (roleID) REFERENCES roleTable(roleID)
 );
 
@@ -38,10 +39,5 @@ CREATE TABLE overview (
     LEFT JOIN employeeTable ON employeeTable.roleID = roleTable.roleID
 );
 
-    SELECT departmentTable.depID, departmentTable.depName, roleTable.title, roleTable.salary
-    FROM roleTable
-    INNER JOIN departmentTable ON departmentTable.depID = roleTable.depID
-
-SELECT * FROM employeeRole;
 SELECT * FROM overview;
 

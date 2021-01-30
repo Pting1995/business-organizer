@@ -24,12 +24,12 @@ function initPrompt() {
             name: "choiceA",
             message: "What would you like to do?",
             choices: [
-                "Add employee",
-                "Add role",
-                "Add department",
                 "View employee",
                 "View role",
                 "View department",
+                "Add employee",
+                "Add role",
+                "Add department",
                 "Update employee role"
             ]
         }
@@ -243,15 +243,11 @@ function changeEmpRole() {
                 }
             ]).then((res) => {
                 var answers = Object.values(res)
-                // console.log(answers)
                 person = answers[0]
                 person = person.split('.')
 
                 role = answers[1]
                 role = role.split('.')
-                console.log(person[0])
-                console.log(role[0])
-                
 
                 connection.query("UPDATE employeeTable SET ? WHERE ?", [
                     {
