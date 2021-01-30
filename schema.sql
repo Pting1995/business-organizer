@@ -31,25 +31,16 @@ CREATE TABLE employeeTable (
   FOREIGN KEY (roleID) REFERENCES roleTable(roleID)
 );
 
-CREATE TABLE roleNum (
-    SELECT employeeTable.firstName, employeeTable.lastName, roleTable.title
-    FROM employeeTable
-    INNER JOIN roleTable
-    ON employeeTable.roleID = roleTable.roleID
-);
-
-    SELECT roleTable.roleID, roleTable.title, employeeTable.employeeID, employeeTable.firstName, employeeTable.lastName
-    FROM roleTable
-    INNER JOIN employeeTable
-    ON employeeTable.roleID = roleTable.roleID
-
-
 CREATE TABLE overview (
     SELECT departmentTable.depName, employeeTable.employeeID, employeeTable.firstName, employeeTable.lastName, roleTable.title, roleTable.salary
     FROM roleTable
     LEFT JOIN departmentTable ON departmentTable.depID = roleTable.depID
     LEFT JOIN employeeTable ON employeeTable.roleID = roleTable.roleID
 );
+
+    SELECT departmentTable.depID, departmentTable.depName, roleTable.title, roleTable.salary
+    FROM roleTable
+    INNER JOIN departmentTable ON departmentTable.depID = roleTable.depID
 
 SELECT * FROM employeeRole;
 SELECT * FROM overview;

@@ -61,7 +61,7 @@ function initPrompt() {
 }
 
 function addEmployeeOverview() {
-    
+
     connection.query("SELECT roleID, title FROM roleTable", function (err, result) {
         if (err) throw err;
         console.table("Role ID & Role Title Reference", result);
@@ -70,7 +70,7 @@ function addEmployeeOverview() {
     connection.query("SELECT employeeID, firstName, lastName FROM employeeTable where roleID = 1", function (err, result) {
         if (err) throw err;
         console.table("Manager Reference", result);
-        
+
         addEmployee();
     });
 }
@@ -118,7 +118,7 @@ function addRoleOverview() {
     connection.query("SELECT depID, depName FROM departmentTable", function (err, result) {
         if (err) throw err;
         console.table("Department ID & Department Name Reference", result);
-        
+
         addRole();
     });
 }
@@ -178,7 +178,8 @@ function addDep() {
 }
 
 function viewEmployees() {
-    connection.query("SELECT * FROM employeeTable", function (err, res) {
+    const query = "SELECT employeeTable.employeeID, employeeTable.firstName, employeeTable.lastName, employeeTable.managerID, employeeTable.roleID, roleTable.title FROM employeeTable INNER JOIN roleTable ON employeeTable.roleID = roleTable.roleID"
+    connection.query(query, function (err, res) {
         if (err) throw err;
 
         console.table("All employees:", res)
@@ -188,7 +189,8 @@ function viewEmployees() {
 }
 
 function viewRoles() {
-    connection.query("SELECT * FROM roleTable", function (err, res) {
+    const query = "SELECT departmentTable.depID, departmentTable.depName, roleTable.title, roleTable.salary FROM departmentTable INNER JOIN roleTable ON departmentTable.depID = roleTable.depID"
+    connection.query(query, function (err, res) {
         if (err) throw err;
 
         console.table("All roles:", res)
@@ -211,19 +213,57 @@ function changeEmpRole() {
     connection.query("SELECT * FROM employeeTable", function (err, res) {
         if (err) throw err;
 
-        const fullName = [];
+        const promptAnswers1 = [];
 
         res.forEach(index => {
-            fullName.push(`${index.firstName} ${index.lastName}`)
+            promptAnswers1.push(`${index.employeeID}.) ${index.firstName} ${index.lastName}`)
         });
 
-        inquirer.prompt([
-            {
-                type: "list",
-                name: "employeeChange",
-                message: "Which employee's role do you want to change?",
-                choices: fullName
-            }
-        ])
-    });
+
+        connection.query("SELECT * FROM roleTable", function (err, res) {
+            if (err) throw err;
+
+            const promptAnswers2 = [];
+
+            res.forEach(index => {
+                promptAnswers2.push(`${index.roleID}.) ${index.title}`)
+            });
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "employee",
+                    message: "Which employee's role do you want to change?",
+                    choices: promptAnswers1
+                },
+                {
+                    type: "list",
+                    name: "role",
+                    message: "What role do you want the employee to have?",
+                    choices: promptAnswers2
+                }
+            ]).then((res) => {
+                var answers = Object.values(res)
+                // console.log(answers)
+                person = answers[0]
+                person = person.split('.')
+
+                role = answers[1]
+                role = role.split('.')
+                console.log(person[0])
+                console.log(role[0])
+                
+
+                connection.query("UPDATE employeeTable SET ? WHERE ?", [
+                    {
+                        roleID: role[0]
+                    },
+                    {
+                        employeeID: person[0]
+                    }
+                ])
+                console.log("Employee's role updated!")
+                initPrompt()
+            })
+        });
+    })
 }
