@@ -32,12 +32,5 @@ CREATE TABLE employeeTable (
   FOREIGN KEY (roleID) REFERENCES roleTable(roleID)
 );
 
-CREATE TABLE overview (
-    SELECT departmentTable.depName, employeeTable.employeeID, employeeTable.firstName, employeeTable.lastName, roleTable.title, roleTable.salary
-    FROM roleTable
-    LEFT JOIN departmentTable ON departmentTable.depID = roleTable.depID
-    LEFT JOIN employeeTable ON employeeTable.roleID = roleTable.roleID
-);
-
 SELECT * FROM overview;
 
