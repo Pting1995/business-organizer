@@ -26,8 +26,8 @@ CREATE TABLE employeeTable (
   firstName VARCHAR(20) NOT NULL,
   lastName VARCHAR(20) NOT NULL,
   roleID INT NOT NULL,
-  managerID INT,
   PRIMARY KEY (employeeID),
+  FOREIGN KEY (managerID) REFERENCES employeeTable(employeeID),
   FOREIGN KEY (roleID) REFERENCES roleTable(roleID)
 );
 
@@ -37,17 +37,18 @@ CREATE TABLE roleNum (
     INNER JOIN roleTable
     ON employeeTable.roleID = roleTable.roleID
 );
-    -- SELECT employeeTable.firstName, employeeTable.lastName, roleTable.title
-    -- FROM roleTable
-    -- INNER JOIN employeeTable
-    -- ON employeeTable.roleID = roleTable.roleID
+
+    SELECT roleTable.roleID, roleTable.title, employeeTable.employeeID, employeeTable.firstName, employeeTable.lastName
+    FROM roleTable
+    INNER JOIN employeeTable
+    ON employeeTable.roleID = roleTable.roleID
 
 
 CREATE TABLE overview (
     SELECT departmentTable.depName, employeeTable.employeeID, employeeTable.firstName, employeeTable.lastName, roleTable.title, roleTable.salary
     FROM roleTable
-    INNER JOIN departmentTable ON departmentTable.depID = roleTable.depID
-    INNER JOIN employeeTable ON employeeTable.roleID = roleTable.roleID
+    LEFT JOIN departmentTable ON departmentTable.depID = roleTable.depID
+    LEFT JOIN employeeTable ON employeeTable.roleID = roleTable.roleID
 );
 
 SELECT * FROM employeeRole;

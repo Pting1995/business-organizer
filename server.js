@@ -36,15 +36,12 @@ function initPrompt() {
     ]).then((res) => {
         switch (res.choiceA) {
             case "Add employee":
-                showOverview()
-                addEmployee()
+                addEmployeeOverview()
                 break;
             case "Add role":
-                showOverview()
-                addRole()
+                addRoleOverview()
                 break;
             case "Add department":
-                showOverview()
                 addDep()
                 break;
             case "View employee":
@@ -63,11 +60,18 @@ function initPrompt() {
     })
 }
 
-function showOverview() {
-    connection.query("SELECT * FROM overview", function (err, res) {
+function addEmployeeOverview() {
+    
+    connection.query("SELECT roleID, title FROM roleTable", function (err, result) {
         if (err) throw err;
+        console.table("Role ID & Role Title Reference", result);
 
-        console.table("All roles:", res)
+    });
+    connection.query("SELECT employeeID, firstName, lastName FROM employeeTable where roleID = 1", function (err, result) {
+        if (err) throw err;
+        console.table("Manager Reference", result);
+        
+        addEmployee();
     });
 }
 
@@ -108,6 +112,15 @@ function addEmployee() {
             }
         )
     })
+}
+
+function addRoleOverview() {
+    connection.query("SELECT depID, depName FROM departmentTable", function (err, result) {
+        if (err) throw err;
+        console.table("Department ID & Department Name Reference", result);
+        
+        addRole();
+    });
 }
 
 function addRole() {
